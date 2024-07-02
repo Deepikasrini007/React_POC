@@ -1,37 +1,43 @@
 pipeline {
     agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the repository
-                checkout scm
-            }
-        }
-
-        stage('Unzip and Setup') {
-            steps {
-                // Navigate to the repository directory
-                dir('/home/ubuntu/React_POC') {
-                    // Unzip the powerbi-api-server zip file
-                    sh 'unzip powerbi-api-server.zip -d powerbi-api-server'
-
-                    // Move into the unzipped directory
-                    dir('powerbi-api-server') {
-                        // Install dependencies
-                        sh 'npm install'
-                    }
-                }
-            }
-        }
-
-        stage('Start Application') {
-            steps {
-                // Start the application
-                dir('/home/ubuntu/React_POC/powerbi-api-server') {
-                    sh 'node index.js'
-                }
-            }
-        }
+    environment {
+        DEPLOYMENT_SERVER = "172.31.17.155"
+        SSH_CREDENTAILSID = "React_App"
     }
+
+   //  stages {
+    //     stage('Checkout') {
+     //       steps {
+                // Checkout the repository
+        //        checkout scm
+       //     }
+      //  }
+
+        stage('SSH into Server') {
+            steps {
+                script {
+                    sshcommend remote: [
+                        allowAnyHosts: true,
+                        failOnError: true,
+                        host: "${env.DEPLOYMENT_SERVER}",
+                        username: 'ubuntu'
+                        credentialsId: "${env.SSH_CREDENTAILSID}"
+                        ], command: ''
+                    cd /home/ubuntu/React_POC/powerbi-api-server
+                    npm install
+                    node index.js
+                }
+            }
+        }
 }
+
+        // stage('Start Application') {
+            / steps {
+                // Start the application
+                // dir('/home/ubuntu/React_POC/powerbi-api-server') {
+                   //  sh 'node index.js'
+               //  }
+           //  }
+    // }
+   // }
+// }
