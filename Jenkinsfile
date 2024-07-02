@@ -12,7 +12,7 @@ pipeline {
         stage('Unzip and Setup') {
             steps {
                 // Navigate to the repository directory
-                dir('path_to_your_repo_directory') {
+                dir('/home/ubuntu/React_POC') {
                     // Unzip the powerbi-api-server zip file
                     sh 'unzip powerbi-api-server.zip -d powerbi-api-server'
 
@@ -28,7 +28,7 @@ pipeline {
         stage('Start Application') {
             steps {
                 // Start the application
-                dir('path_to_your_repo_directory/powerbi-api-server') {
+                dir('/home/ubuntu/React_POC/powerbi-api-server') {
                     sh 'node index.js'
                 }
             }
